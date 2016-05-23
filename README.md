@@ -9,4 +9,4 @@ Second parameter is the separator.
 
 ## Example:
 
-java -cp TestCaseSetSelection.jar br.ufpr.inf.cbiogres.Execute problemaTeste.txt \t
+java -cp TestCaseSetSelection.jar:lib/* br.ufpr.inf.cbiogres.Execute problemaTeste.txt \t
