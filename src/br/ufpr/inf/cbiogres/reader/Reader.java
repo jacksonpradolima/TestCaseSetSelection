@@ -1,8 +1,8 @@
 package br.ufpr.inf.cbiogres.reader;
 
 import br.ufpr.inf.cbiogres.pojo.Mutant;
-import br.ufpr.inf.cbiogres.pojo.Product;
-import br.ufpr.inf.cbiogres.pojo.ProductMutant;
+import br.ufpr.inf.cbiogres.pojo.TestCase;
+import br.ufpr.inf.cbiogres.pojo.TestCaseMutant;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ public class Reader {
     private String separator;
     private InputStream file;
     private List<Mutant> mutants;
-    private List<Product> products;
+    private List<TestCase> testCases;
 
     public Reader(String filePath, String separator) throws FileNotFoundException {
         this(new FileInputStream(filePath), separator);
@@ -40,24 +40,20 @@ public class Reader {
         return mutants;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<TestCase> getTestCases() {
+        return testCases;
     }
 
-    private List<Product> buildProductList(String fileLine) {
-        List<Product> list = new ArrayList<>();
+    private List<TestCase> buildTestCaseList(String fileLine) {
+        List<TestCase> list = new ArrayList<>();
 
         List<String> asList = Arrays.asList(fileLine.split(separator));
+        int idCount = 0;
         for (String string : asList) {
-            try {
-                Long valueOf = Long.valueOf(string);
-                Product product = new Product(valueOf);
-                product.setProductMutantList(new ArrayList<>());
-                list.add(product);
-            } catch (NumberFormatException nfe) {
-                //Skip if not number;
-                continue;
-            }
+            TestCase testCase = new TestCase(idCount++);
+            testCase.setDescription(string);
+            testCase.setTestCaseMutantList(new ArrayList<>());
+            list.add(testCase);
         }
         return list;
     }
@@ -65,15 +61,16 @@ public class Reader {
     public void read() {
         try (Scanner scanner = new Scanner(file)) {
 
-            //Products IDs
+            //Test Case IDs
             String line = scanner.nextLine();
 
-            //Build product objects
-            products = buildProductList(line);
+            //Build Test Case objects
+            testCases = buildTestCaseList(line);
 
             mutants = new ArrayList<>();
 
             //While there is something to read
+            int mutantId = 0;
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
                 //Tokenize
@@ -81,17 +78,17 @@ public class Reader {
                 Iterator<String> tokenIterator = asList.iterator();
                 //First value is the Mutant ID
 
-                Long id = Long.valueOf(tokenIterator.next());
-                Mutant mutant = new Mutant(id);
-                mutant.setProductMutantList(new ArrayList<>());
+                Mutant mutant = new Mutant(mutantId++);
+                mutant.setDescription(tokenIterator.next());
+                mutant.setTestCaseMutantList(new ArrayList<>());
                 mutants.add(mutant);
-                Iterator<Product> productIterator = products.iterator();
-                while (tokenIterator.hasNext() && productIterator.hasNext()) {
+                Iterator<TestCase> testCaseIterator = testCases.iterator();
+                while (tokenIterator.hasNext() && testCaseIterator.hasNext()) {
                     Boolean value = Boolean.valueOf(tokenIterator.next());
-                    Product product = productIterator.next();
-                    ProductMutant productMutant = new ProductMutant(product, mutant, value);
-                    product.getProductMutantList().add(productMutant);
-                    mutant.getProductMutantList().add(productMutant);
+                    TestCase testCase = testCaseIterator.next();
+                    TestCaseMutant testCaseMutant = new TestCaseMutant(testCase, mutant, value);
+                    testCase.getTestCaseMutantList().add(testCaseMutant);
+                    mutant.getTestCaseMutantList().add(testCaseMutant);
                 }
 
             }

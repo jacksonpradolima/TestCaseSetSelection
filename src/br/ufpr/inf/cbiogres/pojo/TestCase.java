@@ -3,17 +3,22 @@ package br.ufpr.inf.cbiogres.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mutant {
+public class TestCase {
 
-    private long id;
+    private long id = Long.MAX_VALUE;
     private String description;
     private List<TestCaseMutant> testCaseMutantList = new ArrayList<>();
 
-    public Mutant(long id) {
-        this.id = id;
+    public TestCase(TestCase testCase) {
+        this.id = testCase.getId();
+        testCaseMutantList.addAll(testCase.getTestCaseMutantList());
     }
 
-    public Mutant() {
+    public TestCase() {
+    }
+
+    public TestCase(long id) {
+        this.id = id;
     }
 
     public long getId() {
@@ -40,7 +45,7 @@ public class Mutant {
         this.testCaseMutantList = testCaseMutantList;
     }
 
-    public int getKilledByCount() {
+    public int getKillCount() {
         int count = 0;
         for (TestCaseMutant testCaseMutant : testCaseMutantList) {
             if (testCaseMutant.isKilled()) {
@@ -53,7 +58,7 @@ public class Mutant {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 83 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
@@ -65,10 +70,17 @@ public class Mutant {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Mutant other = (Mutant) obj;
+        final TestCase other = (TestCase) obj;
         if (this.id != other.id) {
             return false;
         }
         return true;
+    }
+
+    public TestCase getClone() {
+        TestCase clone = new TestCase();
+        clone.setId(this.id);
+        clone.setTestCaseMutantList(this.getTestCaseMutantList());
+        return clone;
     }
 }

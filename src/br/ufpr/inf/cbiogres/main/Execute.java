@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.util.stream.Collectors;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAII;
 import org.uma.jmetal.algorithm.multiobjective.nsgaii.NSGAIIBuilder;
-import org.uma.jmetal.util.AlgorithmRunner;
 
 public class Execute {
 
@@ -23,7 +22,7 @@ public class Execute {
 
         NSGAII<VariableIntegerSolution> algorithm = builder.build();
 
-        AlgorithmRunner runner = new AlgorithmRunner.Executor(algorithm).execute();
+        algorithm.run();
 
         VariableIntegerSolution result = algorithm.getResult()
                 .stream()
@@ -31,7 +30,7 @@ public class Execute {
                 .collect(Collectors.toList())
                 .get(0);
 
-        System.out.println("Test Cases: " + result.getVariables().stream().map(value -> String.valueOf(value)).collect(Collectors.joining(" ")));
+        System.out.println("Test Cases: " + result.getVariables().stream().map(value -> problem.getTestCases().get(value).getDescription()).collect(Collectors.joining(" ")));
         System.out.println("Size: " + result.getObjective(0));
         System.out.println("Score: " + result.getObjective(1));
     }

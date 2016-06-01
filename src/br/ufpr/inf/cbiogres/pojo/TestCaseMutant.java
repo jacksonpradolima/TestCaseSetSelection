@@ -2,24 +2,24 @@ package br.ufpr.inf.cbiogres.pojo;
 
 import java.util.Objects;
 
-public class ProductMutant {
+public class TestCaseMutant {
 
-    private Product product;
+    private TestCase testCase;
     private Mutant mutant;
     private boolean killed;
 
-    public ProductMutant(Product product, Mutant mutant, boolean killed) {
-        this.product = product;
+    public TestCaseMutant(TestCase testCase, Mutant mutant, boolean killed) {
+        this.testCase = testCase;
         this.mutant = mutant;
         this.killed = killed;
     }
 
-    public Product getProduct() {
-        return product;
+    public TestCase getTestCase() {
+        return testCase;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setTestCase(TestCase testCase) {
+        this.testCase = testCase;
     }
 
     public Mutant getMutant() {
@@ -53,7 +53,7 @@ public class ProductMutant {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ProductMutant other = (ProductMutant) obj;
+        final TestCaseMutant other = (TestCaseMutant) obj;
         if (!Objects.equals(this.mutant, other.mutant)) {
             return false;
         }
