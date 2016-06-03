@@ -84,7 +84,26 @@ public class Reader {
                 mutants.add(mutant);
                 Iterator<TestCase> testCaseIterator = testCases.iterator();
                 while (tokenIterator.hasNext() && testCaseIterator.hasNext()) {
-                    Boolean value = Boolean.valueOf(tokenIterator.next());
+                    String token = tokenIterator.next();
+                    Boolean value;
+                    switch (token) {
+                        case "TRUE":
+                        case "true":
+                        case "DEAD":
+                        case "dead":
+                        case "1":
+                            value = true;
+                            break;
+                        case "FALSE":
+                        case "false":
+                        case "ALIVE":
+                        case "alive":
+                        case "0":
+                            value = false;
+                            break;
+                        default:
+                            throw new AssertionError("Value not recognized in the problem instance. Please, use FALSE|TRUE, ALIVE|DEAD, 0|1.");
+                    }
                     TestCase testCase = testCaseIterator.next();
                     TestCaseMutant testCaseMutant = new TestCaseMutant(testCase, mutant, value);
                     testCase.getTestCaseMutantList().add(testCaseMutant);
