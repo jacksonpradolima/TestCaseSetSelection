@@ -4,6 +4,7 @@
  */
 package br.ufpr.inf.cbiogres.problem;
 
+import br.ufpr.inf.cbiogres.exception.TestCaseSetSelectionException;
 import br.ufpr.inf.cbiogres.pojo.Mutant;
 import br.ufpr.inf.cbiogres.pojo.TestCase;
 import br.ufpr.inf.cbiogres.pojo.TestCaseMutant;
@@ -23,17 +24,27 @@ public class TestCaseSetSelectionProblem extends AbstractVariableIntegerProblem 
     private List<TestCase> testCases;
     private List<Mutant> mutants;
 
-    public TestCaseSetSelectionProblem(String matrixPath, String separator) throws FileNotFoundException {
-        Reader reader = new Reader(matrixPath, separator);
-        reader.read();
-        this.testCases = reader.getTestCases();
-        this.mutants = reader.getMutants();
-        setNumberOfObjectives(2);
-        setNumberOfConstraints(0);
-        setNumberOfVariables(testCases.size());
-        setLowerLimit(testCases.stream().map(value -> 0).collect(Collectors.toList()));
-        setUpperLimit(testCases.stream().map(value -> testCases.size() - 1).collect(Collectors.toList()));
-        setName("Test Case Set Selection");
+    public TestCaseSetSelectionProblem(String matrixPath, String separator) throws TestCaseSetSelectionException {
+        try {
+            Reader reader = new Reader(matrixPath, separator);
+            reader.read();
+            this.testCases = reader.getTestCases();
+            if (testCases.isEmpty()) {
+                throw new TestCaseSetSelectionException("No test cases in problem file. Maybe the format is wrong?");
+            }
+            this.mutants = reader.getMutants();
+            if (mutants.isEmpty()) {
+                throw new TestCaseSetSelectionException("No mutants in problem file. Maybe the format is wrong?");
+            }
+            setNumberOfObjectives(2);
+            setNumberOfConstraints(0);
+            setNumberOfVariables(testCases.size());
+            setLowerLimit(testCases.stream().map(value -> 0).collect(Collectors.toList()));
+            setUpperLimit(testCases.stream().map(value -> testCases.size() - 1).collect(Collectors.toList()));
+            setName("Test Case Set Selection");
+        } catch (FileNotFoundException ex) {
+            throw new TestCaseSetSelectionException("Problem file not found!");
+        }
     }
 
     public List<TestCase> getTestCases() {
