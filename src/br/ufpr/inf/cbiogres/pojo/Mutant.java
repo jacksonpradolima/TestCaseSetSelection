@@ -49,6 +49,14 @@ public class Mutant {
         }
         return count;
     }
+    
+    public boolean isDead(){
+        return testCaseMutantList.stream().anyMatch(item -> item.isKilled());
+    }
+    
+    public boolean isAlive(){
+        return !isDead();
+    }
 
     @Override
     public int hashCode() {

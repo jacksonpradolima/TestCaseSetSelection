@@ -14,7 +14,7 @@ public class Execute {
 
     public static void main(String[] args) throws FileNotFoundException {
         try {
-            TestCaseSetSelectionProblem problem = new TestCaseSetSelectionProblem(args[0], args[1]);
+            TestCaseSetSelectionProblem problem = new TestCaseSetSelectionProblem(args[0], args[1], Boolean.parseBoolean(args[2]));
             SinglePointCrossoverVariableLength crossoverOperator = new SinglePointCrossoverVariableLength(1.0);
             PermutationIntegerMutation mutationOperator = new PermutationIntegerMutation(0.05);
 
@@ -39,7 +39,8 @@ public class Execute {
             System.err.println(ex.getMessage());
             System.exit(1);
         } catch (IndexOutOfBoundsException ex) {
-            System.err.println("You must inform 2 arguments. First the problem file path and second the data separator. Please, use quotes for the arguments.");
+            System.err.println("You must inform 3 arguments. First the problem file path, second the data separator, and third if the matrix has a special header with 'Mutant', 'Total' and 'State' keywords."
+                    + "\nPlease, use quotes for the arguments.");
             System.exit(1);
         }
     }

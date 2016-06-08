@@ -1,5 +1,6 @@
 package br.ufpr.inf.cbiogres.reader;
 
+import br.ufpr.inf.cbiogres.exception.TestCaseSetSelectionException;
 import br.ufpr.inf.cbiogres.pojo.Mutant;
 import br.ufpr.inf.cbiogres.pojo.TestCase;
 import br.ufpr.inf.cbiogres.pojo.TestCaseMutant;
@@ -16,16 +17,18 @@ public class Reader {
 
     private String separator;
     private InputStream file;
+    private Boolean complexHeader = false;
     private List<Mutant> mutants;
     private List<TestCase> testCases;
 
-    public Reader(String filePath, String separator) throws FileNotFoundException {
-        this(new FileInputStream(filePath), separator);
+    public Reader(String filePath, String separator, Boolean complexHeader) throws FileNotFoundException {
+        this(new FileInputStream(filePath), separator, complexHeader);
     }
 
-    public Reader(InputStream file, String separator) {
+    public Reader(InputStream file, String separator, Boolean complexHeader) {
         this.file = file;
         this.separator = separator;
+        this.complexHeader = complexHeader;
     }
 
     public InputStream getFile() {
@@ -58,12 +61,17 @@ public class Reader {
         return list;
     }
 
-    public void read() {
+    public void read() throws TestCaseSetSelectionException {
         try (Scanner scanner = new Scanner(file)) {
 
             //Test Case IDs
             String line = scanner.nextLine();
 
+            if (complexHeader) {
+                line = line.replaceAll("Mutant;", "")
+                        .replaceAll(";Total", "")
+                        .replaceAll(";State", "");
+            }
             //Build Test Case objects
             testCases = buildTestCaseList(line);
 
@@ -75,6 +83,11 @@ public class Reader {
                 line = scanner.nextLine();
                 //Tokenize
                 List<String> asList = Arrays.asList(line.split(separator));
+                
+                if(complexHeader){
+                    asList = asList.subList(0, asList.size() - 2);
+                }
+                
                 Iterator<String> tokenIterator = asList.iterator();
                 //First value is the Mutant ID
 
@@ -83,26 +96,34 @@ public class Reader {
                 mutant.setTestCaseMutantList(new ArrayList<>());
                 mutants.add(mutant);
                 Iterator<TestCase> testCaseIterator = testCases.iterator();
-                while (tokenIterator.hasNext() && testCaseIterator.hasNext()) {
+                while (testCaseIterator.hasNext()) {
+                    if (!tokenIterator.hasNext()) {
+                        throw new TestCaseSetSelectionException("The number of test cases does not match the number of data in the matrix."
+                                + "\nMutant '" + mutant.getDescription() + "' has less values than there are test cases.");
+                    }
                     String token = tokenIterator.next();
                     Boolean value;
                     switch (token) {
                         case "TRUE":
+                        case "True":
                         case "true":
                         case "DEAD":
+                        case "Dead":
                         case "dead":
                         case "1":
                             value = true;
                             break;
                         case "FALSE":
+                        case "False":
                         case "false":
                         case "ALIVE":
+                        case "Alive":
                         case "alive":
                         case "0":
                             value = false;
                             break;
                         default:
-                            throw new AssertionError("Value not recognized in the problem instance. Please, use FALSE|TRUE, ALIVE|DEAD, 0|1.");
+                            throw new TestCaseSetSelectionException("Value not recognized in the problem instance. Please, use FALSE|TRUE, ALIVE|DEAD, 0|1.");
                     }
                     TestCase testCase = testCaseIterator.next();
                     TestCaseMutant testCaseMutant = new TestCaseMutant(testCase, mutant, value);
@@ -110,6 +131,14 @@ public class Reader {
                     mutant.getTestCaseMutantList().add(testCaseMutant);
                 }
 
+                if (mutant.isAlive()) {
+                    mutants.remove(mutant);
+                    testCaseIterator = testCases.iterator();
+                    while (testCaseIterator.hasNext()) {
+                        TestCase testCase = testCaseIterator.next();
+                        testCase.getTestCaseMutantList().remove(testCase.getTestCaseMutantList().size() - 1);
+                    }
+                }
             }
         }
     }

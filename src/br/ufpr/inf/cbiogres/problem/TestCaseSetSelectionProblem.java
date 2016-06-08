@@ -24,9 +24,9 @@ public class TestCaseSetSelectionProblem extends AbstractVariableIntegerProblem 
     private List<TestCase> testCases;
     private List<Mutant> mutants;
 
-    public TestCaseSetSelectionProblem(String matrixPath, String separator) throws TestCaseSetSelectionException {
+    public TestCaseSetSelectionProblem(String matrixPath, String separator, Boolean complexHeader) throws TestCaseSetSelectionException {
         try {
-            Reader reader = new Reader(matrixPath, separator);
+            Reader reader = new Reader(matrixPath, separator, complexHeader);
             reader.read();
             this.testCases = reader.getTestCases();
             if (testCases.isEmpty()) {
