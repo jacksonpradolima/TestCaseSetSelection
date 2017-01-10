@@ -39,7 +39,11 @@ java -jar TestCaseSetSelection-*version*-jar-with-dependencies -p=src\\main\\res
 ## About the parameters
 
 **-help** or *-h*: Display the commands available.
+
 **--path** or *-p*: The path to the problem file. (required)
+
 **--dataSeparator** or *-ds*: Data separator. (required)
+
 **--skipHeader** or *-sh*: Skip header? (required)
+
 **--runs** or *-r*: The number of runs to average the results. (optional, default 1)
