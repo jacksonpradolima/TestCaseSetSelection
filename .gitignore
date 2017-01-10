@@ -178,3 +178,4 @@ fabric.properties
 # *.iml
 # modules.xml
 /dist/
+/target/

@@ -1,25 +1,45 @@
 # TestCaseSetSelection
+## A test case set selection using multiobjective optimazation
 
-## Usage:
+[![Gittip](https://img.shields.io/badge/Latest%20stable-1.0-green.svg?style=flat-squared)]()
+[![Gittip](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
-Invoke br.ufpr.inf.cbiogres.Execute.
+# Requirements
 
-First parameter is the path to the problem file (e.g. sampleProblem.txt).
+- Java 1.7 or above to run
+- Maven >= 3.3.9
 
-Second parameter is the data separator.
+# How do I start?
 
-Third parameter is a boolean (true/false) to skip or not header items: Mutant, Total, State.
+1. Dowload the project;
+2. Unzip in some directory of your choise;
+3. Make the command:
 
-Fourth parameter is the number of runs to average the results. (optional)
+```
+mvn install
+```
 
-## Examples:
+4. The target folder will be created. 
+5. Go to the target folder;
+6. Run the jar with dependencies using the command below to see the "help":
 
-java -cp TestCaseSetSelection.jar br.ufpr.inf.cbiogres.Execute sampleProblem.txt ';' false 10
+```
+java -jar TestCaseSetSelection-*version*-jar-with-dependencies -help
+```
 
-java -cp TestCaseSetSelection.jar br.ufpr.inf.cbiogres.Execute jacksonMatrix.txt ';' true 10
+7. Or run the command below:
 
-### Or:
+```
+java -jar TestCaseSetSelection-*version*-jar-with-dependencies -p=src\\main\\resources\\matrixState.csv -ds=; -sh=true -r=1
+```
 
-java -jar TestCaseSetSelection.jar sampleProblem.txt ';' false 10
+8. Examples are available in the project.
 
-java -jar TestCaseSetSelection.jar jacksonMatrix.txt ';' true 10
+# Tips
+## About the parameters
+
+**-help** or *-h*: Display the commands available.
+**--path** or *-p*: The path to the problem file. (required)
+**--dataSeparator** or *-ds*: Data separator. (required)
+**--skipHeader** or *-sh*: Skip header? (required)
+**--runs** or *-r*: The number of runs to average the results. (optional, default 1)
