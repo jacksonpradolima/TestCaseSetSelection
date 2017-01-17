@@ -11,25 +11,25 @@ import org.junit.Test;
  *
  * @author Jackson Antonio do Prado Lima <jacksonpradolima at gmail.com>
  */
-public class ExecuteTest {
+public class CalculateMutationScoreTest {
 
     @Test
     public void testMatrixState() {
-        Execute.main(new String[]{
+        CalculateMutationScore.main(new String[]{
             "-p=src\\main\\resources\\matrixState.csv",
             "-ds=;",
             "-sh=true",
-            "-r=10"
+            "-testCases=testcase6", "testcase5", "testcase3"
         });
     }
 
     @Test
     public void testMatrixNoHeader() {
-        Execute.main(new String[]{
+        CalculateMutationScore.main(new String[]{
             "-p=src\\main\\resources\\matrixNoHeader.csv",
             "-ds=;",
             "-sh=false",
-            "-r=10"
+            "-testCases=testcase6", "testcase5", "testcase1"
         });
     }
 }

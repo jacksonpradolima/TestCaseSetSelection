@@ -11,25 +11,31 @@ import org.junit.Test;
  *
  * @author Jackson Antonio do Prado Lima <jacksonpradolima at gmail.com>
  */
-public class ExecuteTest {
-
+public class ExecuteComparationTest {
+    
     @Test
     public void testMatrixState() {
-        Execute.main(new String[]{
-            "-p=src\\main\\resources\\matrixState.csv",
+        ExecuteComparation.main(new String[]{
+            "-p=src\\main\\resources\\matrixState.csv",            
             "-ds=;",
             "-sh=true",
-            "-r=10"
+            "-r=10",
+            "-op=src\\main\\resources\\matrixNoHeader.csv",
+            "-ods=;",
+            "-osh=false"
         });
     }
 
     @Test
     public void testMatrixNoHeader() {
-        Execute.main(new String[]{
-            "-p=src\\main\\resources\\matrixNoHeader.csv",
+        ExecuteComparation.main(new String[]{
+            "-p=src\\main\\resources\\matrixNoHeader.csv",            
             "-ds=;",
             "-sh=false",
-            "-r=10"
+            "-r=10",
+            "-op=src\\main\\resources\\matrixState.csv",
+            "-ods=;",
+            "-osh=true"
         });
-    }
+    }    
 }

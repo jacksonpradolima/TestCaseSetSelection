@@ -7,6 +7,7 @@ package br.ufpr.inf.gres.main;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,7 @@ import com.beust.jcommander.Parameters;
  * @version 1.0
  */
 @Parameters(separators = " =")
-public class ExecuteCommands {
+public class CalculateMutationScoreCommands {
 
     @Parameter(names = {"-help", "-h"}, help = true)
     public boolean help;
@@ -24,15 +25,15 @@ public class ExecuteCommands {
 
     @Parameter(names = {"--dataSeparator", "-ds"}, description = "Data separator.", required = true)
     public String dataSeparator;
-
+    
     @Parameter(names = {"--skipHeader", "-sh"}, description = "Skip header?", required = true, arity = 1)
     public boolean skipHeader;
-
-    @Parameter(names = {"--runs", "-r"}, description = "The number of runs to average the results", required = false)
-    public int runs;
-
+    
+    @Parameter(names = {"-testCases", "-tc"}, description = "Test cases", required = true, variableArity = true)
+    public List<String> testCases;
+    
     @Override
     public String toString() {
-        return "ExecuteCommands = [path=" + path + ", dataSeparator=" + dataSeparator + ", skipHeader=" + skipHeader + ", runs=" + runs + "]";
+        return "CalculateMutationScoreCommands = [path=" + path + ", dataSeparator=" + dataSeparator + ", skipHeader=" + skipHeader + ", testCases={" + (testCases == null ? "" : String.join(";", testCases)) + "}]";
     }
 }
