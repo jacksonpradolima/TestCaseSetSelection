@@ -2,7 +2,9 @@ package br.ufpr.inf.gres.main;
 
 import br.ufpr.inf.gres.runner.TestCaseSetSelectionBuilder;
 import br.ufpr.inf.gres.exception.TestCaseSetSelectionException;
+import br.ufpr.inf.gres.pojo.OptimizationResult;
 import com.beust.jcommander.JCommander;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +27,20 @@ public class Execute {
                 jCommander.usage();
                 return;
             }
-            
+
             logger.info(jct.toString());
 
-            new TestCaseSetSelectionBuilder(jct.path, jct.dataSeparator)
+            TestCaseSetSelectionBuilder builder = new TestCaseSetSelectionBuilder(jct.path, jct.dataSeparator)
                     .setSkipHeader(jct.skipHeader)
                     .setRuns(jct.runs < 1 ? 1 : jct.runs)
-                    .read()
-                    .run();
+                    .read();
+
+            builder.run();
+
+            List<OptimizationResult> compareResults = builder.getResults();
+
+            logger.info("[Execute] Average Size: " + compareResults.stream().mapToDouble(value -> value.getObjective1Value()).average().getAsDouble());
+            logger.info("[Execute] Average Score: " + compareResults.stream().mapToDouble(value -> value.getObjective2Value()).average().getAsDouble());
         } catch (TestCaseSetSelectionException ex) {
             logger.error(ex.getMessage(), ex);
         }

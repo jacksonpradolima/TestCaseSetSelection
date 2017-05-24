@@ -57,8 +57,9 @@ public class TestCaseSetSelectionBuilder {
      * Compare the optimization result in another matrix to obtain the mutation score
      *
      * @param other
+     * @return 
      */
-    public void compare(TestCaseSetSelectionBuilder other) {
+    public List<OptimizationResult> compare(TestCaseSetSelectionBuilder other) {
         List<OptimizationResult> compareResults = new ArrayList<>();
 
         // Read the informations about the other
@@ -82,11 +83,10 @@ public class TestCaseSetSelectionBuilder {
             logger.debug("Run #" + (i + 1));
             logger.debug(optimizationResultAux.toString());
         }
-
-        logger.info("[Compare] Average Size: " + compareResults.stream().mapToDouble(value -> value.getObjective1Value()).average().getAsDouble());
-        logger.info("[Compare] Average Score: " + compareResults.stream().mapToDouble(value -> value.getObjective2Value()).average().getAsDouble());
+                
+        return compareResults;
     }
-
+       
     /**
      * Get the mutants presents in the matrix
      *
@@ -178,8 +178,8 @@ public class TestCaseSetSelectionBuilder {
             logger.debug("Run #" + (i + 1));
             logger.debug(optimizationResult.toString());
         }
-        logger.info("Average Size: " + optimizationResults.stream().mapToDouble(value -> value.getObjective1Value()).average().getAsDouble());
-        logger.info("Average Score: " + optimizationResults.stream().mapToDouble(value -> value.getObjective2Value()).average().getAsDouble());
+        logger.debug("Average Size: " + optimizationResults.stream().mapToDouble(value -> value.getObjective1Value()).average().getAsDouble());
+        logger.debug("Average Score: " + optimizationResults.stream().mapToDouble(value -> value.getObjective2Value()).average().getAsDouble());
     }
 
     /**

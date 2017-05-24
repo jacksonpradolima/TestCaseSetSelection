@@ -7,7 +7,9 @@ package br.ufpr.inf.gres.main;
 
 import br.ufpr.inf.gres.runner.TestCaseSetSelectionBuilder;
 import br.ufpr.inf.gres.exception.TestCaseSetSelectionException;
+import br.ufpr.inf.gres.pojo.OptimizationResult;
 import com.beust.jcommander.JCommander;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,21 +33,24 @@ public class ExecuteComparation {
                 jCommander.usage();
                 return;
             }
-            
+
             logger.info(jct.toString());
-            
+
             TestCaseSetSelectionBuilder builder = new TestCaseSetSelectionBuilder(jct.path, jct.dataSeparator)
                     .setSkipHeader(jct.skipHeader)
                     .setRuns(jct.runs < 1 ? 1 : jct.runs)
                     .read();
 
             // Obtain the results 
-            builder.run();            
-            
+            builder.run();
+
             //Compare the results obtained with the other matrix
-            builder.compare(new TestCaseSetSelectionBuilder(jct.otherPath, jct.otherDataSeparator).setSkipHeader(jct.otherSkipHeader));                        
+            List<OptimizationResult> compareResults = builder.compare(new TestCaseSetSelectionBuilder(jct.otherPath, jct.otherDataSeparator).setSkipHeader(jct.otherSkipHeader));
+
+            logger.info("[Compare] Average Size: " + compareResults.stream().mapToDouble(value -> value.getObjective1Value()).average().getAsDouble());
+            logger.info("[Compare] Average Score: " + compareResults.stream().mapToDouble(value -> value.getObjective2Value()).average().getAsDouble());
         } catch (TestCaseSetSelectionException ex) {
-            logger.error(ex.getMessage(), ex);            
-        } 
+            logger.error(ex.getMessage(), ex);
+        }
     }
 }
